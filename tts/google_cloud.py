@@ -3,6 +3,7 @@ import tempfile
 import uuid
 import logging
 
+from google.oauth2 import service_account
 from google.cloud import texttospeech, storage
 
 log = logging.getLogger('LR.tts.google_cloud')
@@ -22,7 +23,7 @@ def setup(robot_config):
     global tempDir
     global client
     global voice
-#   global hwNum
+    global hwNum
     global audio_config
     global keyFile
     global languageCode
@@ -30,11 +31,13 @@ def setup(robot_config):
     
 
     voice = robot_config.get('google_cloud', 'voice')
-#   keyFile = robot_config.get('google_cloud', 'key_file')
+    keyFile = robot_config.get('google_cloud', 'key_file')
     hwNum = robot_config.getint('tts', 'hw_num')    
     languageCode = robot_config.get('google_cloud', 'language_code')
 
-    client = texttospeech.TextToSpeechClient()
+    client = texttospeech.TextToSpeechClient(
+        credentials=service_account.Credentials.from_service_account_file(keyFile)
+    )
     
     voice = texttospeech.types.VoiceSelectionParams(
         name=voice,
