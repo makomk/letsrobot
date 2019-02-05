@@ -1,3 +1,5 @@
+#pylint: disable=no-member
+
 import os
 import tempfile
 import uuid
