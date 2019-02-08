@@ -45,22 +45,25 @@ def move(args):
     global rightMotorMax
     global sleepTime
 
+    inverseRight = rightMotorMax * -1
+    inverseLeft = leftMotorMax * -1
+
     direction = args['command']
 
     if direction == 'F':
         TB.SetMotor1(leftMotorMax)
-        TB.SetMotor2(rightMotorMax)
+        TB.SetMotor2(inverseRight)
         time.sleep(sleepTime)
         TB.SetMotor1(0.0)
         TB.SetMotor2(0.0)
     if direction == 'B':
-        TB.SetMotor1(leftMotorMax * -1)
-        TB.SetMotor2(rightMotorMax * -1)
+        TB.SetMotor1(inverseLeft)
+        TB.SetMotor2(rightMotorMax)
         time.sleep(sleepTime)
         TB.SetMotor1(0.0)
         TB.SetMotor2(0.0)
     if direction == 'L':
-        TB.SetMotor1(leftMotorMax * -1)
+        TB.SetMotor1(leftMotorMax)
         TB.SetMotor2(rightMotorMax)
         time.sleep(sleepTime)
         TB.SetMotor1(0.0)
