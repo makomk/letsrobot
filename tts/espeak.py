@@ -29,6 +29,7 @@ def say(*args):
     tempFilePath = os.path.join(tempDir, "text_" + str(uuid.uuid4()))
     f = open(tempFilePath, "w")
     f.write(message)
+#    os.system('echo ' + message + ' | wall')
     f.close()
 
     if male:

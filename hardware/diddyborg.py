@@ -12,6 +12,9 @@ TB.Init()
 
 leftMotorMax = None
 rightMotorMax = None
+#leftMotorTurnSpeed = None
+#rightMotorTurnSpeed = None
+#turnSleepTime = None
 sleepTime = None
 
 
@@ -19,6 +22,9 @@ def setup(robot_config):
     global TB
     global leftMotorMax
     global rightMotorMax
+#    global leftMotorTurnSpeed
+#    global rightMotorTurnSpeed
+#    global turnsSleepTime
     global sleepTime
 
     if not TB.foundChip:
@@ -32,10 +38,12 @@ def setup(robot_config):
             log.critical('Change the I2C Address so it is correct, e.g.')
             log.critical('TB.i2cAddress = 0x%02X' % (boards[0]))
         sys.exit(1)
-    
-    
+
     leftMotorMax = robot_config.getfloat('diddyborg', 'left_motor_max')
     rightMotorMax = robot_config.getfloat('diddyborg', 'right_motor_max')
+#    leftMotorTurnSpeed = robot_config.getfloat('diddyborg', 'left_motor_turn_speed')
+#    rightMotorTurnSpeed = robot_config.getfloat('diddyborg', 'right_motor_turn_speed')
+#    turnSleepTime = robot_config.getfloat('diddyborg', 'turn_sleep_time')
     sleepTime = robot_config.getfloat('diddyborg', 'sleep_time')
 
 
@@ -43,22 +51,27 @@ def move(args):
     global TB
     global leftMotorMax
     global rightMotorMax
+#    global leftMotorTurnSpeed
+#    global rightMotorTurnSpeed
+#    global turnSleepTime
     global sleepTime
-
-    inverseRight = rightMotorMax * -1
-    inverseLeft = leftMotorMax * -1
 
     direction = args['command']
 
+    inverseRight = rightMotorMax * -1
+    inverseLeft = leftMotorMax * -1
+#    inverseLeftTurn = leftMotorTurnSpeed * -1
+#    inverseRightTurn = rightMotorTurnSpedd * -1
+
     if direction == 'F':
-        TB.SetMotor1(leftMotorMax)
-        TB.SetMotor2(inverseRight)
+        TB.SetMotor1(inverseLeft)
+        TB.SetMotor2(rightMotorMax)
         time.sleep(sleepTime)
         TB.SetMotor1(0.0)
         TB.SetMotor2(0.0)
     if direction == 'B':
-        TB.SetMotor1(inverseLeft)
-        TB.SetMotor2(rightMotorMax)
+        TB.SetMotor1(leftMotorMax)
+        TB.SetMotor2(inverseRight)
         time.sleep(sleepTime)
         TB.SetMotor1(0.0)
         TB.SetMotor2(0.0)
@@ -69,8 +82,8 @@ def move(args):
         TB.SetMotor1(0.0)
         TB.SetMotor2(0.0)
     if direction == 'R':
-        TB.SetMotor1(leftMotorMax)
-        TB.SetMotor2(rightMotorMax * -1)
+        TB.SetMotor1(inverseLeft)
+        TB.SetMotor2(inverseRight)
         time.sleep(sleepTime)
         TB.SetMotor1(0.0)
-        TB.SetMotor2(0.0)        
+        TB.SetMotor2(0.0)
