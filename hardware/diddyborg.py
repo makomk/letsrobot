@@ -75,6 +75,3 @@ def move(args):
     if direction == 'R':
         TB.SetMotor1(inverseLeft)
         TB.SetMotor2(inverseRight)
-    if direction == 'stop':
-        TB.SetMotor1(0.0)
-        TB.SetMotor2(0.0)
