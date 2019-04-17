@@ -172,10 +172,10 @@ def say(*args):
         response = client.synthesize_speech(
             synthesis_input, synthesis_voice, audio_config)
 
-        tempFilePath = os.path.join(
-            tempDir, "wav_" + str(uuid.uuid4()) + ".wav")
+        #tempFilePath = os.path.join(
+        #tempDir, "wav_" + str(uuid.uuid4()) + ".wav")
 
-        with open(tempFilePath, 'wb') as out:
-            out.write(response.audio_content)
-            os.system('aplay ' + tempFilePath +
-                      ' -D plughw:{}'.format(hwNum))
+        #with open(tempFilePath, 'wb') as out:
+        #   out.write(response.audio_content)
+        os.system('aplay ' + response.audio_content +
+                  ' -D plughw:{}'.format(hwNum))
