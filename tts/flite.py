@@ -2,19 +2,27 @@ import os
 import tempfile
 import uuid
 import logging
+import subprocess
+import re
 
 log = logging.getLogger('LR.tts.flite')
 
 tempDir = None
 hw_num = None
 voice = None
+censor = None
+
+ngr_re = re.compile(r" n i[hy] (?:g |jh )+(?:er|a[xa]?) ")
+fg_re = re.compile(r" f ae g ")
 
 def setup(robot_config):
     global tempDir
     global hw_num
     global voice
+    global censor
 
     voice = robot_config.get("flite", "voice")
+    censor = robot_config.getboolean('flite', 'censor')
     
     if robot_config.has_option('tts', 'speaker_num'):
         hw_num = robot_config.get('tts', 'speaker_num')
@@ -33,8 +41,14 @@ def say(*args):
     f.write(message)
     f.close()
 
-    os.system('flite -voice ' + voice + ' -f ' + tempFilePath  + ' ' + tempFilePath + '.wav ')
-    os.system('aplay -D plughw:{} '.format(hw_num) + tempFilePath + '.wav')
+    s = subprocess.check_output(['flite', '-ps', '-voice', voice, '-f', tempFilePath, tempFilePath+'.wav'])
+    if censor and ngr_re.search(s):
+        log.info("Censoring %r due to n-word (parsed as %r)", message, s.strip())
+    elif censor and fg_re.search(s):
+        log.info("Censoring %r due to that f-word (parsed as %r)", message, s.strip())
+    else:
+        os.system('aplay -D plughw:{} '.format(hw_num) + tempFilePath + '.wav')
+
     os.remove(tempFilePath + '.wav')
     os.remove(tempFilePath)
     
